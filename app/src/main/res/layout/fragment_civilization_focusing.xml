@@ -9,7 +9,7 @@
         >
     </com.handmark.pulltorefresh.library.PullToRefreshListView>
     <ImageView
-        android:id="@+id/btn"
+        android:id="@+id/iv_return_top"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"

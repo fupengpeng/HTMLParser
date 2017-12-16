@@ -10,14 +10,14 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.administrator.htmlparser.ArticleActivity;
-import com.example.administrator.htmlparser.Fragment.BaseFragment;
-import com.example.administrator.htmlparser.entity.Data;
-import com.example.administrator.htmlparser.DataSynEvent;
-import com.example.administrator.htmlparser.Fragment.impl.IFragmentCivilizationFocusing;
 import com.example.administrator.htmlparser.Adapter.NewsAdapter;
+import com.example.administrator.htmlparser.ArticleActivity;
+import com.example.administrator.htmlparser.DataSynEvent;
+import com.example.administrator.htmlparser.Fragment.BaseFragment;
+import com.example.administrator.htmlparser.Fragment.impl.IFragmentCivilizationFocusing;
 import com.example.administrator.htmlparser.R;
 import com.example.administrator.htmlparser.common.Consts;
+import com.example.administrator.htmlparser.entity.Data;
 import com.example.administrator.htmlparser.event.ArticleSynEvent;
 import com.example.administrator.htmlparser.presenter.factory.CivilizationFocusingPresenterFactory;
 import com.example.administrator.htmlparser.presenter.impl.ICivilizationFocusingPresenter;
@@ -43,9 +43,10 @@ import butterknife.Unbinder;
 public class FragmentCivilizationFocusing extends BaseFragment implements IFragmentCivilizationFocusing {
     @BindView(R.id.fragment_article)
     PullToRefreshListView fragmentArticle;
-    @BindView(R.id.btn)
-    ImageView btn;
+
     Unbinder unbinder;
+    @BindView(R.id.iv_return_top)
+    ImageView ivReturnTop;
     /**
      * 当前页
      */
@@ -84,11 +85,11 @@ public class FragmentCivilizationFocusing extends BaseFragment implements IFragm
         unbinder.unbind();
     }
 
-    @OnClick(R.id.btn)
+    @OnClick(R.id.iv_return_top)
     public void onViewClicked(View v) {
-        switch (v.getId()){
-            case R.id.btn:
-                LogUtils.e("-----","ffff");
+        switch (v.getId()) {
+            case R.id.iv_return_top:
+                LogUtils.e("-----", "ffff");
                 fragmentArticle.getRefreshableView().setSelection(0);
                 break;
         }

@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity implements IMainView, View.OnClic
     @BindView(R.id.viewpager)
     ViewPager viewpager;
 
-    String[] message = new String[4];
+    String[] messageUrl = new String[4];
 
     @BindView(R.id.id_tablayout)
     TabLayout idTablayout;
@@ -78,10 +78,10 @@ public class MainActivity extends BaseActivity implements IMainView, View.OnClic
         BitmapUtils.init(this);
         mViews = new ArrayList<View>();
 
-        message[0] = Consts.NetUrl.CIVILIZATIONFOCUSING_URL;
-        message[1] = Consts.NetUrl.CIVILIZEDCITY_URL;
-        message[2] = Consts.NetUrl.VOLUNTEERSERVICE_URL;
-        message[3] = Consts.NetUrl.CHARMSHOOL_URL;
+        messageUrl[0] = Consts.NetUrl.CIVILIZATIONFOCUSING_URL;
+        messageUrl[1] = Consts.NetUrl.CIVILIZEDCITY_URL;
+        messageUrl[2] = Consts.NetUrl.VOLUNTEERSERVICE_URL;
+        messageUrl[3] = Consts.NetUrl.CHARMSHOOL_URL;
 
         presenter = MainViewPresenterFactory.newHome(this);
         wl = isNetworkConnected();
@@ -122,9 +122,9 @@ public class MainActivity extends BaseActivity implements IMainView, View.OnClic
      */
     private void init() {
         LogUtils.e("----init----初始化数据 -- ");
-        for (int i = 0; i < message.length; i++) {
-            LogUtils.e("----init----初始化数据 -- " + "message-- length= " + message.length);
-            presenter.init(message[i]);
+        for (int i = 0; i < messageUrl.length; i++) {
+            LogUtils.e("----init----初始化数据 -- " + "messageUrl-- length= " + messageUrl.length);
+            presenter.init(messageUrl[i]);
         }
     }
 
@@ -176,7 +176,7 @@ public class MainActivity extends BaseActivity implements IMainView, View.OnClic
 
             for (int i = 0; i < data.size(); i++) {
 
-                message(data.get(i), charmAdapter,  message[i]);
+                message(data.get(i), charmAdapter,  messageUrl[i]);
             }
             img();
             mViewPagerAdapter = new ViewPagerAdapter(mViews);
@@ -207,16 +207,16 @@ public class MainActivity extends BaseActivity implements IMainView, View.OnClic
      * 公益Fragment中的四个按钮布局
      */
     private void img() {
-        View view = LayoutInflater.from(this).inflate(R.layout.fragment_craft, null);
-        final LinearLayout panels = (LinearLayout) view.findViewById(R.id.panels);
-        LinearLayout rail = (LinearLayout) view.findViewById(R.id.rail);
-        LinearLayout plane = (LinearLayout) view.findViewById(R.id.plane);
-        LinearLayout phone = (LinearLayout) view.findViewById(R.id.phone);
+        View craftFragment = LayoutInflater.from(this).inflate(R.layout.fragment_craft, null);
+        final LinearLayout panels = (LinearLayout) craftFragment.findViewById(R.id.panels);
+        LinearLayout rail = (LinearLayout) craftFragment.findViewById(R.id.rail);
+        LinearLayout plane = (LinearLayout) craftFragment.findViewById(R.id.plane);
+        LinearLayout phone = (LinearLayout) craftFragment.findViewById(R.id.phone);
         panels.setOnClickListener(this);
         rail.setOnClickListener(this);
         plane.setOnClickListener(this);
         phone.setOnClickListener(this);
-        mViews.add(view);
+        mViews.add(craftFragment);
     }
 
 
@@ -224,35 +224,35 @@ public class MainActivity extends BaseActivity implements IMainView, View.OnClic
      *
      * @param messages
      * @param adapter
-     * @param s
+     * @param url
      */
-    private void message(ArrayList<Data> messages, NewsAdapter adapter,  String s) {
+    private void message(ArrayList<Data> messages, NewsAdapter adapter,  String url) {
 
-        View view = LayoutInflater.from(this).inflate(R.layout.viewpager, null);
-        final PullToRefreshListView list = (PullToRefreshListView) view.findViewById(R.id.listView);
-        final ImageView img = (ImageView) view.findViewById(R.id.btn);
+        View vpChild = LayoutInflater.from(this).inflate(R.layout.vp_child, null);
+        final PullToRefreshListView pullToRefreshListView = (PullToRefreshListView) vpChild.findViewById(R.id.listView);
+        final ImageView ivReturnTop = (ImageView) vpChild.findViewById(R.id.iv_return_top);
 
-        img.setOnClickListener(new View.OnClickListener() {
+        ivReturnTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                list.getRefreshableView().setSelection(0);
-                img.setVisibility(View.GONE);
+                pullToRefreshListView.getRefreshableView().setSelection(0);
+                ivReturnTop.setVisibility(View.GONE);
             }
         });
         adapter = new NewsAdapter(this);
         adapter.setList(messages);
-        list.setAdapter(adapter);
-        mViews.add(view);
+        pullToRefreshListView.setAdapter(adapter);
+        mViews.add(vpChild);
 
-        list.setMode(PullToRefreshBase.Mode.BOTH);
-        list.getLoadingLayoutProxy(false, true).setPullLabel("上拉加载");
-        list.getLoadingLayoutProxy(false, true).setRefreshingLabel("正在加载中...");
-        list.getLoadingLayoutProxy(false, true).setReleaseLabel("放开加载...");
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullToRefreshListView.getLoadingLayoutProxy(false, true).setPullLabel("上拉加载");
+        pullToRefreshListView.getLoadingLayoutProxy(false, true).setRefreshingLabel("正在加载中...");
+        pullToRefreshListView.getLoadingLayoutProxy(false, true).setReleaseLabel("放开加载...");
 
-        setListeners(list, s, adapter, img);
+        setListeners(pullToRefreshListView, url, adapter, ivReturnTop);
 
 
-        if (s.equals(Consts.NetUrl.CIVILIZATIONFOCUSING_URL)) {
+        if (url.equals(Consts.NetUrl.CIVILIZATIONFOCUSING_URL)) {
             img();
         }
     }
