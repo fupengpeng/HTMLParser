@@ -43,7 +43,7 @@
         app:tabIndicatorColor="#0ddcff"
         app:tabMode="fixed"
         app:tabTextAppearance="@style/TabLayoutTextStyle"
-        app:tabSelectedTextColor="#FF00"
+        app:tabSelectedTextColor="#FF0000"
         app:tabTextColor="#000000"/>
     <View
         android:background="#ededed"

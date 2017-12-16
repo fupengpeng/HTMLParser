@@ -162,6 +162,7 @@ public class MainActivity extends BaseActivity implements IMainView, View.OnClic
             data.add(dataCity);
             data.add(dataService);
             data.add(dataCharm);
+
             int[] ys = new int[4];
             ys[0] = focusPage;
             ys[1] = cityPage;
@@ -176,13 +177,46 @@ public class MainActivity extends BaseActivity implements IMainView, View.OnClic
 
             for (int i = 0; i < data.size(); i++) {
 
-                message(data.get(i), charmAdapter,  messageUrl[i]);
+
+                View vpChild = LayoutInflater.from(this).inflate(R.layout.vp_child, null);
+                final PullToRefreshListView pullToRefreshListView = (PullToRefreshListView) vpChild.findViewById(R.id.listView);
+                final ImageView ivReturnTop = (ImageView) vpChild.findViewById(R.id.iv_return_top);
+
+                ivReturnTop.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pullToRefreshListView.getRefreshableView().setSelection(0);
+                        ivReturnTop.setVisibility(View.GONE);
+                    }
+                });
+                charmAdapter = new NewsAdapter(this);
+                charmAdapter.setList(data.get(i));
+                pullToRefreshListView.setAdapter(charmAdapter);
+
+                mViews.add(vpChild);
+
+                pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+                pullToRefreshListView.getLoadingLayoutProxy(false, true).setPullLabel("上拉加载");
+                pullToRefreshListView.getLoadingLayoutProxy(false, true).setRefreshingLabel("正在加载中...");
+                pullToRefreshListView.getLoadingLayoutProxy(false, true).setReleaseLabel("放开加载...");
+
+                setListeners(pullToRefreshListView, messageUrl[i], charmAdapter, ivReturnTop);
+
+
+                if (messageUrl[i].equals(Consts.NetUrl.CIVILIZATIONFOCUSING_URL)) {
+                    img();
+
+                }
+
             }
-            img();
+
+//            img();
+
             mViewPagerAdapter = new ViewPagerAdapter(mViews);
             viewpager.setAdapter(mViewPagerAdapter);
             idTablayout.setupWithViewPager(viewpager);
             viewpager.setCurrentItem(0);
+
         }
         if (event.getCount() == 4) {
             focusPage = event.getCurrentPage();
@@ -220,42 +254,7 @@ public class MainActivity extends BaseActivity implements IMainView, View.OnClic
     }
 
 
-    /**
-     *
-     * @param messages
-     * @param adapter
-     * @param url
-     */
-    private void message(ArrayList<Data> messages, NewsAdapter adapter,  String url) {
 
-        View vpChild = LayoutInflater.from(this).inflate(R.layout.vp_child, null);
-        final PullToRefreshListView pullToRefreshListView = (PullToRefreshListView) vpChild.findViewById(R.id.listView);
-        final ImageView ivReturnTop = (ImageView) vpChild.findViewById(R.id.iv_return_top);
-
-        ivReturnTop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pullToRefreshListView.getRefreshableView().setSelection(0);
-                ivReturnTop.setVisibility(View.GONE);
-            }
-        });
-        adapter = new NewsAdapter(this);
-        adapter.setList(messages);
-        pullToRefreshListView.setAdapter(adapter);
-        mViews.add(vpChild);
-
-        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
-        pullToRefreshListView.getLoadingLayoutProxy(false, true).setPullLabel("上拉加载");
-        pullToRefreshListView.getLoadingLayoutProxy(false, true).setRefreshingLabel("正在加载中...");
-        pullToRefreshListView.getLoadingLayoutProxy(false, true).setReleaseLabel("放开加载...");
-
-        setListeners(pullToRefreshListView, url, adapter, ivReturnTop);
-
-
-        if (url.equals(Consts.NetUrl.CIVILIZATIONFOCUSING_URL)) {
-            img();
-        }
-    }
 
     /**
      * 上拉加载、下拉刷新数据监听

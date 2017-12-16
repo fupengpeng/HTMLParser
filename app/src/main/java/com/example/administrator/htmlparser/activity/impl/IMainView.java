@@ -7,4 +7,7 @@ import com.example.administrator.htmlparser.Fragment.IBaseView;
  */
 
 public interface IMainView extends IBaseView{
+
+
+
 }

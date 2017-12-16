@@ -31,8 +31,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by Administrator on 2017/7/26.
@@ -41,7 +39,6 @@ import butterknife.Unbinder;
 public class FragmentCharmSchool extends BaseFragment implements IFragmentCharmSchool {
     @BindView(R.id.fragment_charm_school)
     PullToRefreshListView fragmentCharmSchool;
-    Unbinder unbinder;
     /**
      * 当前页
      */
@@ -62,9 +59,10 @@ public class FragmentCharmSchool extends BaseFragment implements IFragmentCharmS
         fragmentCharmSchool.getLoadingLayoutProxy(false, true).setPullLabel("上拉加载");
         fragmentCharmSchool.getLoadingLayoutProxy(false, true).setRefreshingLabel("正在加载中...");
         fragmentCharmSchool.getLoadingLayoutProxy(false, true).setReleaseLabel("放开加载...");
+
         presenter = CharmSchoolPresenterFactory.newHome(this);
         presenter.init(Consts.NetUrl.CHARMSHOOL_URL);
-        unbinder = ButterKnife.bind(this, view);
+
         return view;
     }
 
@@ -73,11 +71,6 @@ public class FragmentCharmSchool extends BaseFragment implements IFragmentCharmS
         fragmentCharmSchool.setOnItemClickListener(new InnerOnItemClickListener11());
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 
     /**
      * 子项点击监听器
@@ -102,7 +95,6 @@ public class FragmentCharmSchool extends BaseFragment implements IFragmentCharmS
         @Override
         public void onPullDownToRefresh(PullToRefreshBase refreshView) {
 //            // 下拉刷新
-//            refreshData(1);
             presenter.refresh(Consts.NetUrl.CHARMSHOOL_URL);
             new FinishRefresh().execute();
             LogUtils.e("-shool----", "----xia--");
@@ -114,7 +106,6 @@ public class FragmentCharmSchool extends BaseFragment implements IFragmentCharmS
             if (currentPage >= Integer.valueOf(zysl)) {
                 Toast.makeText(getActivity(), "没有更多数据", Toast.LENGTH_SHORT).show();
                 // 加载完成
-//                PullToRefreshUtils.refreshComplete(lvDataList);
                 LogUtils.e("-school--","--上---");
                 new FinishRefresh().execute();
                 return;
